@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
+    <title>Unsplash API</title> 
+
+    <style>
+    html {
+        position: relative;
+        min-height: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        font-family: '-apple-system,BlinkMacSystemFont,San Francisco,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Segoe UI,Arial,sans-serif';
+        margin: 0;
+        background-color:  white;
+        color: #00293c;
+        font-family: arial;
+    }
+
+    .header {
+        width: 100%;
+        height: 40px;
+        top:0;
+        left: 0;
+        position: sticky;
+        background-color: white;
+        position: sticky;
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        padding: 10px 10px;
+    }
+
+    .home-button {
+        position:absolute;
+        left:0;
+        top:0;
+        padding: inherit;
+    }
+
+    #photo-search {
+        border: none;
+        position: absolute;
+        background-color: lightgrey;
+        height: 40px;
+        width: 60%;
+        border-radius: 25px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        text-align: center 
+    }
+
+    #photo-search:hover {
+        border: 1px solid grey;
+        transition: ease-in;
+        transition-duration: 0.5s;
+    }
+    
+    #find-photo {
+        border: none;
+        background-color: inherit;
+        color: grey;
+        border: none;   
+        margin-left: 5px;
+        width: 5%;
+        padding-right: 2px;
+    }
+
+    #photo-input {
+        background-color: inherit;
+        border: none;
+        color: grey;
+        margin: none;
+        padding: 8px;
+        width: 80%;
+        font-weight: 400;
+        outline: none;
+    }  
+
+    #view-photos {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        padding: 12px;
+    }
+
+    #footer-page {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 150px;
+        width: 100%;
+        overflow: hidden;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 2rem;
+        color: grey;
+        cursor: pointer;
+    }
+
+    @media screen and (max-width:760px) {
+        h1{
+            text-align: center;
+        }
+        #find-photo{margin-right: 12px}
+    }
+
+    @media only screen and (max-width:480px) { 
+        .header{
+            display: inline-block;
+        }
+        #photo-input {
+            width: 60%;
+        }
+     }
+    
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a class="home-button" href="index.html"><i class="fas fa-home"></i></a>
+        <form id='photo-search'>
+            <button id='find-photo' type='submit' value='Photo Search'><i class="fas fa-search"></i></button>
+            <input type='text' name='photoSearch' placeholder="Search photos" id='photo-input'>
+        <form>
+    </div>
+    <div id='view-photos'>
+    <h1>Discover your favorite photos with Unsplash</h1>    
+    <div>
+
+    <div id="footer-page">
+        <h3 className="highlight">Let's get in touch</h3>
+        <div className="social-links">
+            <a href="mailto:jslzr27@gmail.com? subject=subject text" rel="noopener noreferrer" target="_blank">
+                <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/jesus-salazar-484837173/" rel="noopener noreferrer"  target="_blank">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://github.com/jslzr27" rel="noopener noreferrer"  target="_blank">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://jesussalazar.dev/" rel="noopener noreferrer"  target="_blank">
+                <i class="fas fa-link"></i>
+            </a>    
+        </div>
+        <p>Jesus Salazar <span className="highlight">©2019</span></p>
+    </div>
+
+<script type="text/javascript">
+
+const clientID = "b89a97cf74e80f68c868b1e838dc84e545712fb01597a8cfa1a99a99e429a10e";
+const endPoint = "https://api.unsplash.com/search/photos";
+
+const form = document.getElementById('photo-search');
+
+function getPhotos(query) {
+    fetch(`${endPoint}?per_page=25&query=${query}&client_id=${clientID}`)
+    .then(result => {
+        return result.json();
+    })
+    .then(data => {
+        let photoList = data.results;
+
+        for(let i = 0; i < photoList.length ; i++){
+            let photos = photoList[i].urls.regular; 
+            let elem = document.createElement("img");
+            elem.setAttribute('src', photos);
+            document.querySelector('h1').style.display = 'none'
+            document.getElementById('view-photos').appendChild(elem);
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    })
+}
+
+form.onsubmit = function(e) {
+    e.preventDefault();
+    search = form.photoSearch.value;
+    form.reset();
+
+    getPhotos(search);
+};
+
+</script>
+</body>
+</html>
